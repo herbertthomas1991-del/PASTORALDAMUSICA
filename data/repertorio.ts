@@ -94,4 +94,21 @@ Hosana nas alturas.`
 Cordeiro de Deus que tirais o pecado do mundo, tende piedade de nós. 
 
 Cordeiro de Deus que tirais o pecado do mundo, dai-nos a vossa paz.`
-  };
+  },
+
+  // CANTOS PRÓPRIOS (POR DATA)
+  {
+    id: 'batismo-do-senhor-11-jan',
+    title: 'Pois abriram-se os céus (Batismo do Senhor)',
+    category: SongCategory.Acclamation,
+    date: '2026-01-11',
+    lyrics: `Pois abriram-se os céus
+E a voz do Pai se ouviu:
+Eis meu Filho muito amado
+Profecia se abriu.
+
+Aleluia, aleluia,
+Aleluia, aleluia,
+Aleluia, aleluia! (Bis)`
+  }
+];
