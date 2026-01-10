@@ -2,6 +2,17 @@
 import { LiturgicalYear, LiturgicalSeason } from '../types';
 
 /**
+ * Converte um objeto Date para string YYYY-MM-DD mantendo o fuso horário local.
+ * Essencial para evitar que o .toISOString() mude a data devido ao fuso UTC.
+ */
+export const toDateString = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+/**
  * Calcula a data da Páscoa para um determinado ano (Algoritmo de Meeus/Jones/Butcher)
  */
 export const getEaster = (year: number): Date => {

@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Song, SongCategory } from '../types';
 import { saveSong, getAllSongs, deleteSong } from '../services/storage';
 import { VARIABLE_CATEGORIES, FIXED_CATEGORIES } from '../constants';
-import { getSundaysOfMonth } from '../utils/liturgy';
+import { getSundaysOfMonth, toDateString } from '../utils/liturgy';
 import NavigationMenu from '../components/NavigationMenu';
 
 const Admin: React.FC = () => {
@@ -122,7 +123,7 @@ const Admin: React.FC = () => {
                     <select value={selectedDate} onChange={e => setSelectedDate(e.target.value)} className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:bg-white outline-none text-sm font-semibold">
                       <option value="">Escolher data...</option>
                       {nextSundays.map(date => {
-                        const dStr = date.toISOString().split('T')[0];
+                        const dStr = toDateString(date);
                         return <option key={dStr} value={dStr}>{date.toLocaleDateString('pt-BR')}</option>;
                       })}
                     </select>

@@ -98,7 +98,7 @@ Cordeiro de Deus que tirais o pecado do mundo, dai-nos a vossa paz.`
 
   // CANTOS PRÓPRIOS (POR DATA)
   {
-    id: 'batismo-do-senhor-11-jan',
+    id: 'batismo-do-senhor-2026',
     title: 'Pois abriram-se os céus (Batismo do Senhor)',
     category: SongCategory.Acclamation,
     date: '2026-01-11',

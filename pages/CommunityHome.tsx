@@ -1,7 +1,8 @@
+
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import Header from '../components/Header';
-import { getSundaysOfMonth, getLiturgicalSundayInfo } from '../utils/liturgy';
+import { getSundaysOfMonth, getLiturgicalSundayInfo, toDateString } from '../utils/liturgy';
 
 const CommunityHome: React.FC = () => {
   const now = new Date();
@@ -60,7 +61,7 @@ const CommunityHome: React.FC = () => {
             return (
               <Link 
                 key={idx} 
-                to={`/comunidade/missa/${sunday.toISOString().split('T')[0]}`}
+                to={`/comunidade/missa/${toDateString(sunday)}`}
                 className={`flex items-center justify-between p-6 bg-white rounded-3xl border transition-all hover:scale-[1.01] active:scale-[0.99] ${
                   isToday || isNext ? 'border-red-500 shadow-xl ring-4 ring-red-500/5' : 'border-gray-100 shadow-sm'
                 }`}
