@@ -71,8 +71,8 @@ Só vós sois o Santo, só vós o Senhor, só vós o Altíssimo, Jesus Cristo, c
 
   // SANTO (TEXTO FIXO ÚNICO)
   {
-    id: 'santo-oficial',
-    title: 'Santo oficial',
+    id: 'santo',
+    title: 'Santo',
     category: SongCategory.Holy,
     isFixed: true,
     lyrics: `Santo, santo, santo, Senhor Deus do Universo.
@@ -102,7 +102,13 @@ Cordeiro de Deus que tirais o pecado do mundo, dai-nos a vossa paz.`
     title: 'Pois abriram-se os céus (Batismo do Senhor)',
     category: SongCategory.Acclamation,
     date: '2026-01-11',
-    lyrics: `Pois abriram-se os céus
+    lyrics: `Pois abriram-se os céus (Batismo do Senhor)
+    
+Aleluia, aleluia,
+Aleluia, aleluia,
+Aleluia, aleluia! (Bis)
+
+Pois abriram-se os céus
 E a voz do Pai se ouviu:
 Eis meu Filho muito amado
 Profecia se abriu.
