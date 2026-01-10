@@ -1,32 +1,31 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  // 1. Pegamos o endereço (host) que o usuário digitou
-  const hostname = request.headers.get('host')
+export function middleware(req: NextRequest) {
+  const hostname = req.headers.get('host');
+  
+  // URL que você criou para a comunidade
+  const communityHost = 'letras-pastoraldamusica.vercel.app';
 
-  // 2. Definimos qual é o domínio da comunidade
-  const linkComunidade = 'letras-pastoraldamusica.vercel.app'
-
-  // 3. Se o usuário estiver vindo pelo link de letras...
-  if (hostname === linkComunidade) {
-    const url = request.nextUrl.clone()
-    
-    // ...e se ele estiver tentando acessar a página inicial "/"
-    if (url.pathname === '/') {
-      // Nós "forçamos" ele a ver o conteúdo da página /letras
-      url.pathname = '/letras' 
-      return NextResponse.rewrite(url)
-    }
+  // Se o acesso for pelo domínio de letras e estiver na raiz
+  if (hostname === communityHost && req.nextUrl.pathname === '/') {
+    // Redireciona internamente para a página de letras
+    return NextResponse.rewrite(new URL('/letras', req.url));
   }
 
-  // Se for o domínio oficial, o sistema segue o fluxo normal
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
-// 4. Configuração para o Middleware não rodar em imagens ou arquivos internos
+// Configuração crucial para evitar erros de módulos não suportados
 export const config = {
   matcher: [
+    /*
+     * Aplica o middleware apenas em páginas, ignorando:
+     * - api (rotas de API)
+     * - _next/static (arquivos estáticos)
+     * - _next/image (otimização de imagens)
+     * - favicon.ico, etc.
+     */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
-}
+};
