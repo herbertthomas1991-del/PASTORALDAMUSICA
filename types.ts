@@ -10,17 +10,15 @@ export enum LiturgicalSeason {
 }
 
 export enum SongCategory {
-  // Variáveis do Domingo
-  Entrance = 'Canto de Entrada',
-  Acclamation = 'Aclamação ao Evangelho',
-  Offertory = 'Canto de Ofertas',
-  Communion = 'Canto de Comunhão',
-  Dismissal = 'Canto de Dispersão',
-  // Partes Fixas (Ordinário)
-  Penitential = 'Ato Penitencial',
-  Gloria = 'Glória',
-  Holy = 'Santo',
-  LambOfGod = 'Cordeiro de Deus'
+  Entrance = 'CANTO DE ENTRADA',
+  Penitential = 'ATO PENITENCIAL',
+  Gloria = 'GLÓRIA',
+  Acclamation = 'CANTO DE ACLAMAÇÃO AO EVANGELHO',
+  Offertory = 'CANTO DE APRESENTAÇÃO DAS OFERTAS',
+  Holy = 'SANTO',
+  LambOfGod = 'CORDEIRO',
+  Communion = 'CANTO DE COMUNHÃO',
+  Dismissal = 'CANTO DE DISPERSÃO'
 }
 
 export interface Song {
@@ -29,7 +27,7 @@ export interface Song {
   lyrics: string;
   link?: string;
   category: SongCategory;
-  date?: string; // Opcional para cantos fixos
+  date?: string;
   isFixed?: boolean;
 }
 

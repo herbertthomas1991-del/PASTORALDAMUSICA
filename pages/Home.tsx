@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import Header from '../components/Header';
@@ -7,7 +8,6 @@ const Home: React.FC = () => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
-  // Estado para controlar qual mês estamos visualizando
   const [viewDate, setViewDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1));
   
   const year = getLiturgicalYear(viewDate);
@@ -17,7 +17,6 @@ const Home: React.FC = () => {
     return getSundaysOfMonth(viewDate.getFullYear(), viewDate.getMonth());
   }, [viewDate]);
 
-  // Identifica qual é a próxima missa (hoje ou a primeira futura)
   const nextMassIndex = useMemo(() => {
     return sundays.findIndex(sunday => {
       const sDate = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate());
@@ -37,7 +36,6 @@ const Home: React.FC = () => {
     setViewDate(new Date(now.getFullYear(), now.getMonth(), 1));
   };
 
-  // Mapeamento de cores litúrgicas para classes Tailwind
   const liturgicalTextColorMap = {
     green: 'text-emerald-600',
     white: 'text-amber-500', 
@@ -49,64 +47,59 @@ const Home: React.FC = () => {
     <>
       <Header />
       <div className="max-w-4xl mx-auto py-8 px-4">
-        {/* Seção Litúrgica */}
+        {/* Seção Litúrgica - Referência de Proporção e Hierarquia */}
         <section className="bg-white rounded-2xl shadow-md border border-gray-100 mb-10 overflow-hidden">
           <div className="grid grid-cols-2 divide-x divide-gray-100">
-            <div className="p-6 flex flex-col items-center justify-center text-center">
-              <h2 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ano Litúrgico</h2>
-              <span className="text-lg md:text-xl font-black text-gray-900 leading-tight">Ano {year}</span>
+            <div className="p-5 flex flex-col items-center justify-center text-center">
+              <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Ano Litúrgico</h2>
+              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">Ciclo {year}</span>
             </div>
 
-            <div className="p-6 flex flex-col items-center justify-center text-center">
-              <h2 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Tempo Atual</h2>
-              <span className="text-lg md:text-xl font-black text-gray-900 leading-tight">{season}</span>
+            <div className="p-5 flex flex-col items-center justify-center text-center">
+              <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Tempo Atual</h2>
+              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">{season}</span>
             </div>
           </div>
         </section>
 
-        {/* Cabeçalho do Repertório com Navegação Centralizada */}
+        {/* Navegação de Meses */}
         <section>
           <div className="flex flex-col items-center mb-10 gap-4">
-            <h3 className="text-[10px] font-black text-gray-400 tracking-[0.2em] uppercase">Repertório das Missas</h3>
-            
-            <div className="flex items-center bg-white border border-gray-100 rounded-full p-1.5 shadow-sm">
+            <div className="flex items-center bg-white border border-gray-100 rounded-full p-1 shadow-md">
               <button 
                 onClick={prevMonth}
-                className="p-2.5 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors"
+                className="p-2 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors"
                 aria-label="Mês Anterior"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
               </button>
               
-              <div className="px-8 text-center min-w-[180px]">
-                <span className="text-sm font-black text-gray-900 uppercase tracking-widest block">
+              <div className="px-6 text-center min-w-[160px]">
+                <span className="text-xs font-black text-gray-900 uppercase tracking-widest block leading-none">
                   {viewDate.toLocaleDateString('pt-BR', { month: 'long' })}
-                </span>
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter block">
-                  {viewDate.getFullYear()}
                 </span>
               </div>
 
               <button 
                 onClick={nextMonth}
-                className="p-2.5 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors"
+                className="p-2 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors"
                 aria-label="Próximo Mês"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
             
-            {viewDate.getMonth() !== now.getMonth() || viewDate.getFullYear() !== now.getFullYear() ? (
+            {(viewDate.getMonth() !== now.getMonth() || viewDate.getFullYear() !== now.getFullYear()) && (
               <button 
                 onClick={goToToday}
-                className="text-[9px] font-black text-red-600 uppercase tracking-[0.15em] hover:bg-red-50 px-3 py-1 rounded-full transition-colors"
+                className="text-[9px] font-black text-red-600 uppercase tracking-widest hover:underline px-3 py-1 transition-all"
               >
-                Voltar para hoje
+                Voltar para este mês
               </button>
-            ) : null}
+            )}
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {sundays.map((sunday, idx) => {
               const sundayOnlyDate = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate());
               const isToday = sundayOnlyDate.getTime() === today.getTime();
@@ -114,99 +107,75 @@ const Home: React.FC = () => {
               const isNext = idx === nextMassIndex;
               const info = getLiturgicalSundayInfo(sunday);
               
-              let cardClasses = "";
-              let textClasses = "";
-              let iconClasses = "";
-              let dateClasses = "";
-              let labelClasses = "";
+              // Base de estilos para os cards
+              let cardClasses = "bg-white border-gray-100 shadow-md hover:border-red-200 hover:shadow-lg";
+              let textClasses = "text-gray-400";
+              let dateClasses = liturgicalTextColorMap[info.color];
+              let labelClasses = "text-gray-900";
 
               if (isToday) {
-                cardClasses = "bg-red-600 border-red-700 shadow-2xl shadow-red-200 text-white translate-y-[-4px] z-10 ring-4 ring-red-600/20";
-                textClasses = "text-white/80";
-                iconClasses = "bg-white/20 text-white";
-                dateClasses = "text-white"; 
-                labelClasses = "text-red-100";
+                cardClasses = "bg-white border-red-500 shadow-xl ring-4 ring-red-500/5 translate-y-[-2px]";
+                labelClasses = "text-gray-900";
               } else if (isPast) {
-                cardClasses = "bg-gray-100/50 border-gray-300 shadow-md opacity-70 grayscale-[0.4] hover:grayscale-0 hover:opacity-100 transition-all";
-                textClasses = "text-gray-400";
-                iconClasses = "bg-gray-200 text-gray-400";
-                dateClasses = liturgicalTextColorMap[info.color] + " opacity-50";
-                labelClasses = "text-gray-500";
+                // Restaurada a sombra shadow-md para manter a profundidade igual aos outros cards
+                cardClasses = "bg-gray-50/50 border-gray-100 opacity-60 grayscale-[0.3] shadow-md";
+                textClasses = "text-gray-300";
+                dateClasses = "text-gray-400";
+                labelClasses = "text-gray-400";
               } else if (isNext) {
-                // DESTAQUE DA PRÓXIMA MISSA (Quando não é hoje)
-                cardClasses = "bg-white border-red-500 shadow-2xl hover:shadow-red-100 -translate-y-1 ring-4 ring-red-500/10";
-                textClasses = "text-gray-500";
-                iconClasses = "bg-red-50 text-red-500";
-                dateClasses = liturgicalTextColorMap[info.color];
-                labelClasses = "text-gray-900";
-              } else {
-                cardClasses = "bg-white border-gray-200 shadow-md hover:border-red-300 hover:shadow-xl hover:-translate-y-1";
-                textClasses = "text-gray-500";
-                iconClasses = "bg-gray-50 text-gray-300 group-hover:bg-red-50 group-hover:text-red-500";
-                dateClasses = liturgicalTextColorMap[info.color];
-                labelClasses = "text-gray-900";
+                cardClasses = "bg-white border-red-300 shadow-lg translate-y-[-1px]";
               }
 
               return (
                 <Link 
                   key={idx} 
                   to={`/missa/${sunday.toISOString().split('T')[0]}`}
-                  className={`group relative block p-8 rounded-[2rem] border transition-all duration-300 ${cardClasses}`}
+                  className={`group relative flex items-center p-5 rounded-2xl border transition-all duration-300 ${cardClasses}`}
                 >
-                  {/* Badge de Próxima/Hoje */}
-                  {(isNext || isToday) && (
-                    <div className={`absolute -top-3 left-8 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm ${
-                      isToday ? 'bg-white text-red-600' : 'bg-red-600 text-white'
-                    }`}>
-                      {isToday ? 'Missa de Hoje' : 'Próxima Missa'}
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between mb-6">
-                    <span className={`font-black text-5xl leading-none tracking-tighter ${dateClasses}`}>
-                      {sunday.getDate().toString().padStart(2, '0')}
+                  {/* Container da data com proporção harmonizada com o box de Ano Litúrgico */}
+                  <div className={`flex items-center justify-center w-12 h-12 rounded-xl bg-gray-50 mr-5 transition-colors group-hover:bg-red-50`}>
+                    <span className={`font-black text-xl md:text-2xl tracking-tighter ${dateClasses}`}>
+                      {sunday.getDate()}
                     </span>
-                    <div className={`p-3 rounded-full transition-all ${iconClasses}`}>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[11px] font-black uppercase tracking-tight block ${labelClasses}`}>
+                  <div className="flex-1 min-w-0 pr-6">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h4 className={`text-[10px] font-black uppercase tracking-tight truncate ${labelClasses}`}>
                         {info.label}
-                      </span>
-                      {isPast && (
-                        <span className="text-[8px] bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded font-bold uppercase">Passada</span>
+                      </h4>
+                      {isToday && (
+                        <span className="flex-shrink-0 w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse"></span>
                       )}
                     </div>
-                    <span className={`text-xs font-medium block truncate ${textClasses}`}>
+                    <p className={`text-[10px] font-medium uppercase tracking-wider truncate ${textClasses}`}>
                       {info.celebration}
-                    </span>
+                    </p>
+                  </div>
+
+                  <div className="text-gray-200 group-hover:text-red-500 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </Link>
               );
             })}
             
             {sundays.length === 0 && (
-              <div className="col-span-full py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                <p className="text-gray-400 text-sm font-medium italic">Nenhum domingo encontrado para este período.</p>
+              <div className="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-gray-200 shadow-md">
+                <p className="text-gray-300 text-xs font-bold uppercase tracking-widest">Nenhuma missa encontrada</p>
               </div>
             )}
           </div>
         </section>
 
-        <div className="mt-16 text-center">
+        <div className="mt-12 text-center">
           <Link 
             to="/admin" 
-            className="inline-flex items-center px-6 py-3 rounded-full bg-white border border-gray-100 text-gray-400 hover:text-red-600 hover:border-red-200 text-[11px] font-bold transition-all shadow-sm hover:shadow-md active:scale-95"
+            className="inline-flex items-center px-5 py-2.5 rounded-full bg-white border border-gray-100 text-gray-300 hover:text-red-600 hover:border-red-200 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95"
           >
-            <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            Área de Gestão
+            Acesso Restrito
           </Link>
         </div>
       </div>

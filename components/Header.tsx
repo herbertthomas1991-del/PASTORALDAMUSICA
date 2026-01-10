@@ -1,18 +1,24 @@
-
 import React from 'react';
 import { Link } from 'react-router';
 import NavigationMenu from './NavigationMenu';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  hideMenu?: boolean;
+  logoLink?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ hideMenu = false, logoLink = "/" }) => {
   return (
     <header className="bg-white border-b border-gray-100 py-6 md:py-8 px-4 relative">
       <div className="max-w-4xl mx-auto flex flex-col items-center">
         {/* Menu posicionado no canto superior direito */}
-        <div className="absolute right-4 top-4 md:right-8 md:top-8">
-          <NavigationMenu />
-        </div>
+        {!hideMenu && (
+          <div className="absolute right-4 top-4 md:right-8 md:top-8">
+            <NavigationMenu />
+          </div>
+        )}
 
-        <Link to="/" className="inline-block group text-center">
+        <Link to={logoLink} className="inline-block group text-center">
           <div className="flex flex-col items-center">
             <div className="relative w-20 h-20 md:w-24 md:h-24 mb-4 transition-transform group-hover:scale-105 duration-300">
               <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">

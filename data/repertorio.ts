@@ -1,39 +1,98 @@
 
 import { Song, SongCategory } from '../types';
 
-/**
- * Este é o banco de dados oficial do seu site.
- * Para adicionar novos cantos, basta seguir o padrão abaixo.
- * As datas devem estar no formato YYYY-MM-DD (ex: 2025-05-11 para 11 de Maio de 2025).
- */
 export const REPERTORIO_ESTATICO: Song[] = [
+  // ATO PENITENCIAL (3 OPÇÕES DISPONÍVEIS EM TODOS OS DOMINGOS)
   {
-    id: 'intro-1',
-    title: 'Alegres Vamos',
-    category: SongCategory.Entrance,
-    date: '2025-05-11', // Exemplo: 4º Domingo da Páscoa
-    lyrics: `Alegres vamos à casa do Pai;
-E na alegria cantar seu louvor!
-Em sua casa, somos felizes:
-Participamos da ceia do amor.
+    id: 'penitencial-1',
+    title: 'Ato penitencial 1 (Confesso a Deus)',
+    category: SongCategory.Penitential,
+    isFixed: true,
+    lyrics: `Confesso a Deus Todo-Poderoso e a vós, irmãos e irmãs, que pequei muitas vezes por pensamentos e palavras, atos e omissões, por minha culpa, minha tão grande culpa.
 
-1. A alegria nos vem do Senhor,
-Seu amor nos conduz pela mão.
-Ele é o caminho, a vida e a luz,
-Jesus Cristo, nosso irmão!`,
-    link: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+E peço à Virgem Maria, aos Anjos e Santos, e a vós, irmãos e irmãs, que rogueis por mim a Deus, Nosso Senhor.`
   },
   {
-    id: 'gloria-fixo-1',
-    title: 'Glória a Deus nas Alturas',
+    id: 'penitencial-2',
+    title: 'Ato penitencial 2 (Tende compaixão)',
+    category: SongCategory.Penitential,
+    isFixed: true,
+    lyrics: `Tende compaixão de nós, Senhor.
+Todos: Porque somos pecadores.
+
+Manifestai, Senhor, a vossa misericórdia.
+Todos: E dai-nos a vossa salvação.
+
+Segue-se a absolvição sacerdotal:
+Presbítero: Deus Todo-Poderoso tenha compaixão de nós, perdoe os nossos pecados e nos conduza à vida eterna.
+Todos: Amém.
+
+Senhor, tende piedade de nós.
+Todos: Senhor, tende piedade de nós.
+Cristo, tende piedade de nós.
+Todos: Cristo, tende piedade de nós.
+Senhor, tende piedade de nós.
+Todos: Senhor, tende piedade de nós.`
+  },
+  {
+    id: 'penitencial-3',
+    title: 'Ato penitencial 3 (Senhor, que viestes salvar)',
+    category: SongCategory.Penitential,
+    isFixed: true,
+    lyrics: `Senhor, que viestes salvar os corações arrependidos, tende piedade de nós.
+Todos: Senhor, tende piedade de nós.
+
+Cristo, que viestes chamar os pecadores, tende piedade de nós.
+Todos: Cristo, tende piedade de nós.
+
+Senhor, que intercedeis por nós junto ao Pai, tende piedade de nós.
+Todos: Senhor, tende piedade de nós.`
+  },
+
+  // GLÓRIA (TEXTO FIXO ÚNICO)
+  {
+    id: 'gloria-oficial',
+    title: 'Hino de Louvor',
     category: SongCategory.Gloria,
     isFixed: true,
-    lyrics: `Glória a Deus nas alturas,
-e paz na terra aos homens por Ele amados.
-Senhor Deus, Rei dos céus, Deus Pai todo-poderoso:
-nós Vos louvamos, nós Vos bendizemos,
-nós Vos adoramos, nós Vos glorificamos...`,
-    link: ''
+    lyrics: `Glória a Deus nas alturas e paz na terra aos homens por ele amados.
+Nós vos louvamos, nós vos bendizemos, nós vos adoramos, nós vos glorificamos, nós vos damos graças por vossa imensa glória.
+
+Senhor Deus, rei dos céus, Deus Pai todo-poderoso.
+Senhor Jesus Cristo, Filho unigênito, Senhor Deus, cordeiro de Deus, Filho de Deus Pai.
+
+Vós que tirais o pecado do mundo, tende piedade de nós.
+Vós que tirais o pecado do mundo, acolhei a nossa súplica.
+Vós que estais à direita do Pai, tende piedade de nós.
+Tende piedade de nós. Tende piedade de nós!
+
+Só vós sois o Santo, só vós o Senhor, só vós o Altíssimo, Jesus Cristo, com o Espírito Santo, na glória de Deus Pai. Amém!`
+  },
+
+  // SANTO (TEXTO FIXO ÚNICO)
+  {
+    id: 'santo-oficial',
+    title: 'Santo oficial',
+    category: SongCategory.Holy,
+    isFixed: true,
+    lyrics: `Santo, santo, santo, Senhor Deus do Universo.
+O céu e a terra proclamam a vossa glória.
+Hosana nas alturas.
+
+Bendito o que vem em nome do Senhor.
+Hosana nas alturas.`
+  },
+
+  // CORDEIRO (TEXTO FIXO ÚNICO)
+  {
+    id: 'cordeiro-oficial',
+    title: 'Cordeiro de Deus',
+    category: SongCategory.LambOfGod,
+    isFixed: true,
+    lyrics: `Cordeiro de Deus que tirais o pecado do mundo, tende piedade de nós. 
+
+Cordeiro de Deus que tirais o pecado do mundo, tende piedade de nós. 
+
+Cordeiro de Deus que tirais o pecado do mundo, dai-nos a vossa paz.`
   }
-  // Adicione mais cantos aqui...
 ];

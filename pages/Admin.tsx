@@ -16,7 +16,6 @@ const Admin: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
   
   const isFixedCategory = FIXED_CATEGORIES.includes(category);
-  const communityLink = `${window.location.origin}${window.location.pathname}#/comunidade`;
 
   const now = new Date();
   const nextSundays = [
@@ -90,51 +89,11 @@ const Admin: React.FC = () => {
         </div>
         <div className="max-w-5xl mx-auto px-6 py-12 text-center md:py-20">
           <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tight mb-3">Área do Coordenador</h1>
-          <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Gestão de Repertório e Acesso da Comunidade</p>
+          <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Gestão de Repertório e Cantos</p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto py-12 px-4 space-y-12">
-        {/* NOVA SEÇÃO: COMPARTILHAR COM A COMUNIDADE */}
-        <section className="bg-white p-8 rounded-[3rem] shadow-xl border border-red-100 overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-10 opacity-5">
-             <svg className="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-          </div>
-          
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1">
-              <span className="inline-block px-3 py-1 bg-red-600 text-white text-[9px] font-black uppercase tracking-widest rounded-full mb-4">Acesso da Assembleia</span>
-              <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">Compartilhar com a Comunidade</h2>
-              <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-                Divulgue este link ou QR Code para que os fiéis possam acompanhar as letras das músicas diretamente no celular durante a missa. Este link dá acesso <strong>apenas</strong> às letras.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <div className="flex-1 bg-gray-50 p-4 rounded-2xl border border-gray-100 font-mono text-[11px] text-gray-400 break-all select-all">
-                  {communityLink}
-                </div>
-                <button 
-                  onClick={() => {navigator.clipboard.writeText(communityLink); alert('Link copiado!');}}
-                  className="px-6 py-4 bg-gray-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-gray-800 transition-colors"
-                >
-                  Copiar Link
-                </button>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center p-6 bg-gray-50 rounded-[2.5rem] border border-gray-200">
-              {/* QR CODE SIMULADO (SVG) */}
-              <div className="w-40 h-40 bg-white p-3 rounded-2xl shadow-sm mb-4 border border-gray-100">
-                <svg viewBox="0 0 100 100" className="w-full h-full text-gray-900">
-                  <path fill="currentColor" d="M0 0h30v10H10v20H0V0zm70 0h30v30h-10V10H70V0zM0 70h10v20h20v10H0V70zm100 30H70v-10h20V70h10v30zM20 20h20v20H20V20zm40 0h20v20H60V20zm0 40h20v20H60V60zM20 60h20v20H20V60zm30-10h10v10H50V50zm10-10h10v10H60V40zm-10 20h10v10H50V60zm-10-10h10v10H40V50z" />
-                </svg>
-              </div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Acesso Rápido (QR Code)</p>
-              <button className="mt-4 text-red-600 text-[10px] font-bold uppercase hover:underline">Imprimir QR Code</button>
-            </div>
-          </div>
-        </section>
-
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
           <section className="lg:col-span-2">
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
