@@ -2,8 +2,25 @@
 import { LiturgicalYear, LiturgicalSeason } from '../types';
 
 /**
+ * Tabela oficial de transição dos ciclos litúrgicos (1º Domingo do Advento)
+ */
+const LITURGICAL_TRANSITIONS: { date: string; cycle: LiturgicalYear }[] = [
+  { date: '2024-12-01', cycle: 'C' }, // Início do Ano C anterior
+  { date: '2025-11-30', cycle: 'A' },
+  { date: '2026-11-29', cycle: 'B' },
+  { date: '2027-11-28', cycle: 'C' },
+  { date: '2028-12-03', cycle: 'A' },
+  { date: '2029-12-02', cycle: 'B' },
+  { date: '2030-12-01', cycle: 'C' },
+  { date: '2031-11-30', cycle: 'A' },
+  { date: '2032-11-28', cycle: 'B' },
+  { date: '2033-11-27', cycle: 'C' },
+  { date: '2034-12-03', cycle: 'A' },
+  { date: '2035-12-02', cycle: 'B' }
+];
+
+/**
  * Converte um objeto Date para string YYYY-MM-DD mantendo o fuso horário local.
- * Essencial para evitar que o .toISOString() mude a data devido ao fuso UTC.
  */
 export const toDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -13,7 +30,26 @@ export const toDateString = (date: Date): string => {
 };
 
 /**
- * Calcula a data da Páscoa para um determinado ano (Algoritmo de Meeus/Jones/Butcher)
+ * Retorna o Ano Litúrgico (A, B ou C) baseado na tabela de transições.
+ */
+export const getLiturgicalYear = (date: Date): LiturgicalYear => {
+  const dateStr = toDateString(date);
+  
+  // Percorre as transições do futuro para o passado
+  // A primeira transição que for menor ou igual à data atual define o ciclo.
+  const transitions = [...LITURGICAL_TRANSITIONS].sort((a, b) => b.date.localeCompare(a.date));
+  
+  for (const transition of transitions) {
+    if (dateStr >= transition.date) {
+      return transition.cycle;
+    }
+  }
+  
+  return 'C'; // Fallback para ciclo atual antes de 2025
+};
+
+/**
+ * Calcula a data da Páscoa para um determinado ano.
  */
 export const getEaster = (year: number): Date => {
   const a = year % 19;
@@ -31,16 +67,6 @@ export const getEaster = (year: number): Date => {
   const month = Math.floor((h + l - 7 * m + 114) / 31);
   const day = ((h + l - 7 * m + 114) % 31) + 1;
   return new Date(year, month - 1, day);
-};
-
-export const getLiturgicalYear = (date: Date): LiturgicalYear => {
-  const year = date.getFullYear();
-  const adventStart = getAdventStart(year);
-  const targetYear = date >= adventStart ? year + 1 : year;
-  const remainder = (targetYear - 2011) % 3;
-  if (remainder === 0) return 'A';
-  if (remainder === 1) return 'B';
-  return 'C';
 };
 
 const getAdventStart = (year: number): Date => {
@@ -79,13 +105,11 @@ export const getLiturgicalSundayInfo = (date: Date): LiturgicalSundayInfo => {
   const baptism = new Date(epiphany);
   baptism.setDate(epiphany.getDate() + 7);
 
-  // Advento (Roxo)
   if (date >= adventStart && date < christmas) {
     const weeks = Math.ceil((date.getTime() - adventStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
     return { label: `${weeks}º DOMINGO DO ADVENTO`, celebration: `Advento`, dateFormatted: dStr, color: 'purple' };
   }
 
-  // Natal e Oitava (Branco)
   if (date >= christmas || (month === 0 && date < baptism)) {
     if (month === 11 && day === 25) return { label: 'NATAL DO SENHOR', celebration: 'Nascimento de Jesus', dateFormatted: dStr, color: 'white' };
     if (month === 11 && date > christmas) return { label: 'SAGRADA FAMÍLIA', celebration: '8ª de Natal', dateFormatted: dStr, color: 'white' };
@@ -94,13 +118,11 @@ export const getLiturgicalSundayInfo = (date: Date): LiturgicalSundayInfo => {
     return { label: 'OITAVA DE NATAL', celebration: 'Tempo do Natal', dateFormatted: dStr, color: 'white' };
   }
 
-  // Quaresma e Páscoa
   const ashWednesday = new Date(easter);
   ashWednesday.setDate(easter.getDate() - 46);
   const pentecost = new Date(easter);
   pentecost.setDate(easter.getDate() + 49);
 
-  // Quaresma (Roxo)
   if (date >= ashWednesday && date < easter) {
     const weeks = Math.ceil((date.getTime() - ashWednesday.getTime()) / (7 * 24 * 60 * 60 * 1000));
     const labels = ["1º DOMINGO DA QUARESMA", "2º DOMINGO DA QUARESMA", "3º DOMINGO DA QUARESMA", "4º DOMINGO DA QUARESMA", "5º DOMINGO DA QUARESMA", "DOMINGO DE RAMOS"];
@@ -113,7 +135,6 @@ export const getLiturgicalSundayInfo = (date: Date): LiturgicalSundayInfo => {
     };
   }
 
-  // Páscoa e Pentecostes (Branco/Vermelho)
   if (date >= easter && date <= pentecost) {
     if (date.getTime() === easter.getTime()) return { label: 'DOMINGO DA RESSURREIÇÃO', celebration: 'Páscoa do Senhor', dateFormatted: dStr, color: 'white' };
     const weeks = Math.ceil((date.getTime() - easter.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
@@ -121,7 +142,6 @@ export const getLiturgicalSundayInfo = (date: Date): LiturgicalSundayInfo => {
     return { label: `${weeks}º DOMINGO DA PÁSCOA`, celebration: 'Tempo Pascal', dateFormatted: dStr, color: 'white' };
   }
 
-  // Tempo Comum (Verde)
   const startOfOrdinary = new Date(baptism);
   startOfOrdinary.setDate(baptism.getDate() + 1);
   

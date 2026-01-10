@@ -10,8 +10,11 @@ const Home: React.FC = () => {
   
   const [viewDate, setViewDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1));
   
-  const year = getLiturgicalYear(viewDate);
-  const season = getLiturgicalSeason(viewDate);
+  // O ciclo litúrgico agora é baseado no mês que o usuário está visualizando
+  const currentLiturgicalYear = getLiturgicalYear(viewDate);
+  
+  // As informações de tempo e lista de domingos baseadas na visualização
+  const viewedSeason = getLiturgicalSeason(viewDate);
   
   const sundays = useMemo(() => {
     return getSundaysOfMonth(viewDate.getFullYear(), viewDate.getMonth());
@@ -47,28 +50,33 @@ const Home: React.FC = () => {
     <>
       <Header />
       <div className="max-w-4xl mx-auto py-8 px-4">
+        {/* Card Informativo Superior - Agora Dinâmico */}
         <section className="bg-white rounded-2xl shadow-md border border-gray-100 mb-10 overflow-hidden">
           <div className="grid grid-cols-2 divide-x divide-gray-100">
             <div className="p-5 flex flex-col items-center justify-center text-center">
               <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Ano Litúrgico</h2>
-              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">Ano {year}</span>
+              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">Ano {currentLiturgicalYear}</span>
             </div>
             <div className="p-5 flex flex-col items-center justify-center text-center">
               <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Tempo Atual</h2>
-              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">{season}</span>
+              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">{viewedSeason}</span>
             </div>
           </div>
         </section>
 
         <section>
+          {/* Seletor de Mês e Ano Civil */}
           <div className="flex flex-col items-center mb-10 gap-4">
             <div className="flex items-center bg-white border border-gray-100 rounded-full p-1 shadow-md">
               <button onClick={prevMonth} className="p-2 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <div className="px-6 text-center min-w-[160px]">
+              <div className="px-6 text-center min-w-[160px] py-1">
                 <span className="text-xs font-black text-gray-900 uppercase tracking-widest block leading-none">
                   {viewDate.toLocaleDateString('pt-BR', { month: 'long' })}
+                </span>
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mt-1">
+                  {viewDate.getFullYear()}
                 </span>
               </div>
               <button onClick={nextMonth} className="p-2 hover:bg-gray-50 rounded-full text-gray-400 hover:text-red-600 transition-colors">
