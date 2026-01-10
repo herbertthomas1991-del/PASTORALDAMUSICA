@@ -16,7 +16,7 @@ export const getAllSongs = (): Song[] => {
 
 export const getSongsByDate = (dateStr: string): Song[] => {
   const songs = getAllSongs();
-  return songs.filter(s => s.date.split('T')[0] === dateStr.split('T')[0]);
+  return songs.filter(s => s.date && s.date.split('T')[0] === dateStr.split('T')[0]);
 };
 
 export const deleteSong = (id: string) => {
