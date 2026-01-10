@@ -51,7 +51,7 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-2 divide-x divide-gray-100">
             <div className="p-5 flex flex-col items-center justify-center text-center">
               <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Ano Litúrgico</h2>
-              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">Ciclo {year}</span>
+              <span className="text-base md:text-lg font-black text-gray-900 leading-tight">Ano {year}</span>
             </div>
             <div className="p-5 flex flex-col items-center justify-center text-center">
               <h2 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Tempo Atual</h2>

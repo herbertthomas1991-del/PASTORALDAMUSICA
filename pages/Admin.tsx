@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Song, SongCategory } from '../types';
-import { saveSong, getAllSongs, deleteSong } from '../services/storage';
+import { saveSong, deleteSong, getAdminSongsList } from '../services/storage';
 import { VARIABLE_CATEGORIES, FIXED_CATEGORIES } from '../constants';
-import { getSundaysOfMonth, toDateString } from '../utils/liturgy';
+import { getSundaysOfMonth, toDateString, getLiturgicalYear } from '../utils/liturgy';
 import NavigationMenu from '../components/NavigationMenu';
 
 const Admin: React.FC = () => {
@@ -25,7 +25,7 @@ const Admin: React.FC = () => {
   ].filter(d => d >= new Date(now.setHours(0,0,0,0)));
 
   useEffect(() => {
-    setSongs(getAllSongs());
+    setSongs(getAdminSongsList());
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,7 +46,7 @@ const Admin: React.FC = () => {
     };
 
     saveSong(newSong);
-    setSongs(getAllSongs());
+    setSongs(getAdminSongsList());
     
     setTitle('');
     setLyrics('');
@@ -58,7 +58,7 @@ const Admin: React.FC = () => {
     if (id.startsWith('local-')) {
       if (confirm("Deseja excluir este registro local?")) {
         deleteSong(id);
-        setSongs(getAllSongs());
+        setSongs(getAdminSongsList());
       }
     } else {
       alert("Este canto faz parte do banco de dados oficial (código).");
@@ -124,7 +124,8 @@ const Admin: React.FC = () => {
                       <option value="">Escolher data...</option>
                       {nextSundays.map(date => {
                         const dStr = toDateString(date);
-                        return <option key={dStr} value={dStr}>{date.toLocaleDateString('pt-BR')}</option>;
+                        const cycle = getLiturgicalYear(date);
+                        return <option key={dStr} value={dStr}>{date.toLocaleDateString('pt-BR')} (Ano {cycle})</option>;
                       })}
                     </select>
                   </div>

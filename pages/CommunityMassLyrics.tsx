@@ -12,14 +12,14 @@ const CommunityMassLyrics: React.FC = () => {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [activeFixedId, setActiveFixedId] = useState<Record<string, string | null>>({});
 
+  const sundayDate = useMemo(() => (date ? new Date(date + 'T12:00:00') : new Date()), [date]);
+  
   const songs = useMemo(() => (date ? getSongsByDate(date) : []), [date]);
-  const allFixedSongs = useMemo(() => getAllSongs().filter(s => s.isFixed), []);
+  const allFixedSongs = useMemo(() => getAllSongs(sundayDate).filter(s => s.isFixed), [sundayDate]);
 
   if (!date) return null;
-  const sundayDate = new Date(date + 'T12:00:00');
   const info = getLiturgicalSundayInfo(sundayDate);
 
-  // Ordem Litúrgica idêntica à do Ministro
   const liturgicalFlow = [
     { category: SongCategory.Entrance, mode: 'direct' },
     { category: SongCategory.Penitential, mode: 'menu' },
@@ -48,7 +48,6 @@ const CommunityMassLyrics: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50/20 pb-20">
-      {/* Header Mobile-Friendly */}
       <div className={`${headerBg} px-6 py-10 text-center transition-colors duration-500 relative shadow-sm`}>
         <button onClick={() => navigate('/comunidade')} className={`absolute top-1/2 -translate-y-1/2 left-6 flex items-center text-xs font-black uppercase tracking-widest ${isWhiteHeader ? 'text-gray-400' : 'text-white/60'}`}>
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
@@ -99,7 +98,6 @@ const CommunityMassLyrics: React.FC = () => {
             } else {
               const options = allFixedSongs.filter(o => o.category === step.category);
               const selectedId = activeFixedId[step.category];
-              const selectedSong = options.find(o => o.id === selectedId);
 
               return (
                 <div key={step.category} className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded ? 'border-blue-200 shadow-md' : 'border-gray-100 shadow-sm'}`}>

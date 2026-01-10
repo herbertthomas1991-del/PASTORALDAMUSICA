@@ -13,14 +13,13 @@ const MassDetail: React.FC = () => {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [selectedFixedId, setSelectedFixedId] = useState<Record<string, string | null>>({});
 
+  const sundayDate = useMemo(() => (date ? new Date(date + 'T12:00:00') : new Date()), [date]);
   const songs = useMemo(() => (date ? getSongsByDate(date) : []), [date]);
-  const allFixedSongs = useMemo(() => getAllSongs().filter(s => s.isFixed), []);
+  const allFixedSongs = useMemo(() => getAllSongs(sundayDate).filter(s => s.isFixed), [sundayDate]);
 
   if (!date) return null;
-  const sundayDate = new Date(date + 'T12:00:00');
   const info = getLiturgicalSundayInfo(sundayDate);
 
-  // Ordem Litúrgica Exata conforme solicitação
   const liturgicalFlow = [
     { category: SongCategory.Entrance, mode: 'direct' },
     { category: SongCategory.Penitential, mode: 'menu' },
