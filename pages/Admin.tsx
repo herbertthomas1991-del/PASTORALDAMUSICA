@@ -1,12 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Song, SongCategory } from '../types';
 import { saveSong, getAllSongs, deleteSong } from '../services/storage';
 import { VARIABLE_CATEGORIES, FIXED_CATEGORIES } from '../constants';
-import { getSundaysOfMonth, formatDateBr } from '../utils/liturgy';
+import { getSundaysOfMonth } from '../utils/liturgy';
+import NavigationMenu from '../components/NavigationMenu';
 
 const Admin: React.FC = () => {
+  const navigate = useNavigate();
   const [songs, setSongs] = useState<Song[]>([]);
   const [title, setTitle] = useState('');
   const [lyrics, setLyrics] = useState('');
@@ -15,6 +16,7 @@ const Admin: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
   
   const isFixedCategory = FIXED_CATEGORIES.includes(category);
+  const communityLink = `${window.location.origin}${window.location.pathname}#/comunidade`;
 
   const now = new Date();
   const nextSundays = [
@@ -29,12 +31,12 @@ const Admin: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !lyrics || (!selectedDate && !isFixedCategory)) {
-      alert("Por favor, preencha o título, a letra e a data (se for canto de domingo).");
+      alert("Por favor, preencha o título, a letra e a data.");
       return;
     }
 
     const newSong: Song = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: `local-${Math.random().toString(36).substr(2, 9)}`,
       title,
       lyrics,
       link,
@@ -46,185 +48,157 @@ const Admin: React.FC = () => {
     saveSong(newSong);
     setSongs(getAllSongs());
     
-    // Clear form
     setTitle('');
     setLyrics('');
     setLink('');
-    alert("Canto publicado com sucesso!");
+    alert("Canto salvo localmente!");
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Deseja realmente excluir este canto?")) {
-      deleteSong(id);
-      setSongs(getAllSongs());
+    if (id.startsWith('local-')) {
+      if (confirm("Deseja excluir este registro local?")) {
+        deleteSong(id);
+        setSongs(getAllSongs());
+      }
+    } else {
+      alert("Este canto faz parte do banco de dados oficial (código).");
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4">
-      {/* Header Centralizado com Hierarquia Ajustada */}
-      <div className="mb-12 flex flex-col items-center">
-        <Link to="/" className="mb-4 text-gray-400 hover:text-red-600 transition-colors flex items-center text-xs font-bold uppercase tracking-widest">
-          <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Sair da Gestão
-        </Link>
-        <h2 className="text-lg md:text-xl font-black text-gray-900 tracking-[0.2em] uppercase text-center border-b-2 border-red-600 pb-1">
-          Gestão de Repertório
-        </h2>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-gray-900 text-white border-b border-gray-800 relative">
+        <div className="max-w-5xl mx-auto px-6 pt-6 flex justify-between items-center relative z-10">
+          <button onClick={() => navigate(-1)} className="flex items-center text-[11px] font-bold text-white/40 hover:text-white transition-opacity">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+            Voltar
+          </button>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="hover:scale-105 transition-transform">
+              <div className="w-10 h-10 drop-shadow-md">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs><clipPath id="adminLogoClip"><circle cx="100" cy="100" r="90" /></clipPath></defs>
+                  <g clipPath="url(#adminLogoClip)">
+                    <rect x="0" y="0" width="100" height="100" fill="#FBBF24" /><rect x="100" y="0" width="100" height="100" fill="#16A34A" /><rect x="0" y="100" width="100" height="100" fill="#0EA5E9" /><rect x="100" y="100" width="100" height="100" fill="#EF4444" />
+                  </g>
+                  <text x="100" y="145" textAnchor="middle" style={{ fontFamily: 'serif', fontSize: '150px', fill: 'black' }}>𝄞</text>
+                </svg>
+              </div>
+            </Link>
+            <NavigationMenu light />
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto px-6 py-12 text-center md:py-20">
+          <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tight mb-3">Área do Coordenador</h1>
+          <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Gestão de Repertório e Acesso da Comunidade</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Form Section */}
-        <section className="lg:col-span-2">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 sticky top-4">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Título do Canto</label>
-                <input 
-                  type="text" 
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm font-medium text-gray-800"
-                  placeholder="Nome do canto..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Categoria Litúrgica</label>
-                <select 
-                  value={category}
-                  onChange={e => setCategory(e.target.value as SongCategory)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm font-medium text-gray-800 cursor-pointer"
-                >
-                  <optgroup label="Cantos de Domingo (Variáveis)">
-                    {VARIABLE_CATEGORIES.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Ordinário (Partes Fixas)">
-                    {FIXED_CATEGORIES.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </optgroup>
-                </select>
-              </div>
-
-              {!isFixedCategory && (
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Selecione o Domingo</label>
-                  <select 
-                    value={selectedDate}
-                    onChange={e => setSelectedDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm font-medium text-gray-800 cursor-pointer"
-                  >
-                    <option value="">Escolha uma data...</option>
-                    {nextSundays.map(date => {
-                      const dStr = date.toISOString().split('T')[0];
-                      return (
-                        <option key={dStr} value={dStr}>
-                          {date.getDate()}/{date.getMonth() + 1} - {date.getFullYear()}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              )}
-
-              {isFixedCategory && (
-                <div className="bg-blue-50 p-3 rounded-xl border border-blue-100">
-                  <p className="text-[10px] text-blue-600 font-bold uppercase tracking-tighter leading-tight">
-                    Parte Fixa: Este canto será adicionado à lista permanente do Ordinário da Missa.
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Letra / Cifras</label>
-                <textarea 
-                  rows={8}
-                  value={lyrics}
-                  onChange={e => setLyrics(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm font-medium text-gray-800 font-sans"
-                  placeholder="Cole aqui a letra..."
-                ></textarea>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Link da Melodia (Opcional)</label>
-                <input 
-                  type="url" 
-                  value={link}
-                  onChange={e => setLink(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm font-medium text-gray-800"
-                  placeholder="Link YouTube/Spotify..."
-                />
-              </div>
-
-              <button 
-                type="submit"
-                className="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition-all shadow-md shadow-red-100 active:scale-[0.98] uppercase tracking-wider text-xs"
-              >
-                Publicar no Repertório
-              </button>
-            </form>
+      <div className="max-w-6xl mx-auto py-12 px-4 space-y-12">
+        {/* NOVA SEÇÃO: COMPARTILHAR COM A COMUNIDADE */}
+        <section className="bg-white p-8 rounded-[3rem] shadow-xl border border-red-100 overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-10 opacity-5">
+             <svg className="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
           </div>
-        </section>
-
-        {/* List Section */}
-        <section className="lg:col-span-3">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-            <h3 className="text-lg font-bold mb-6 text-gray-800 flex items-center">
-               <svg className="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-               </svg>
-               Histórico de Publicações
-            </h3>
-            <div className="space-y-3 max-h-[1000px] overflow-y-auto pr-2">
-              {songs.length === 0 ? (
-                <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">
-                   <p className="text-gray-400 text-sm font-medium">Nenhum canto publicado no banco de dados.</p>
+          
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1">
+              <span className="inline-block px-3 py-1 bg-red-600 text-white text-[9px] font-black uppercase tracking-widest rounded-full mb-4">Acesso da Assembleia</span>
+              <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">Compartilhar com a Comunidade</h2>
+              <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+                Divulgue este link ou QR Code para que os fiéis possam acompanhar as letras das músicas diretamente no celular durante a missa. Este link dá acesso <strong>apenas</strong> às letras.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="flex-1 bg-gray-50 p-4 rounded-2xl border border-gray-100 font-mono text-[11px] text-gray-400 break-all select-all">
+                  {communityLink}
                 </div>
-              ) : (
-                songs.sort((a, b) => {
-                  if (a.isFixed && !b.isFixed) return 1;
-                  if (!a.isFixed && b.isFixed) return -1;
-                  return new Date(b.date || '').getTime() - new Date(a.date || '').getTime();
-                }).map(song => (
-                  <div key={song.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center group hover:bg-white hover:border-red-200 transition-all">
-                    <div className="flex-1 min-w-0 pr-4">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-bold text-gray-900 truncate text-sm">{song.title}</h4>
-                        {song.isFixed && (
-                          <span className="text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded font-black uppercase">Fixo</span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="text-[10px] bg-white border border-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">
-                          {song.category}
-                        </span>
-                        {!song.isFixed && song.date && (
-                          <span className="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-bold">
-                            {formatDateBr(new Date(song.date + 'T12:00:00'))}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => handleDelete(song.id)}
-                      className="text-gray-300 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  </div>
-                ))
-              )}
+                <button 
+                  onClick={() => {navigator.clipboard.writeText(communityLink); alert('Link copiado!');}}
+                  className="px-6 py-4 bg-gray-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-gray-800 transition-colors"
+                >
+                  Copiar Link
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center p-6 bg-gray-50 rounded-[2.5rem] border border-gray-200">
+              {/* QR CODE SIMULADO (SVG) */}
+              <div className="w-40 h-40 bg-white p-3 rounded-2xl shadow-sm mb-4 border border-gray-100">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-gray-900">
+                  <path fill="currentColor" d="M0 0h30v10H10v20H0V0zm70 0h30v30h-10V10H70V0zM0 70h10v20h20v10H0V70zm100 30H70v-10h20V70h10v30zM20 20h20v20H20V20zm40 0h20v20H60V20zm0 40h20v20H60V60zM20 60h20v20H20V60zm30-10h10v10H50V50zm10-10h10v10H60V40zm-10 20h10v10H50V60zm-10-10h10v10H40V50z" />
+                </svg>
+              </div>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Acesso Rápido (QR Code)</p>
+              <button className="mt-4 text-red-600 text-[10px] font-bold uppercase hover:underline">Imprimir QR Code</button>
             </div>
           </div>
         </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+          <section className="lg:col-span-2">
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase tracking-tight">Adicionar Canto</h3>
+              <p className="text-xs text-gray-400 mb-8">Cadastre cantos para os próximos domingos.</p>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-3">Título</label>
+                  <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:bg-white outline-none transition-all text-sm font-semibold" placeholder="Título..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-3">Categoria</label>
+                  <select value={category} onChange={e => setCategory(e.target.value as SongCategory)} className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:bg-white outline-none text-sm font-semibold">
+                    <optgroup label="Variáveis">
+                      {VARIABLE_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </optgroup>
+                    <optgroup label="Fixas">
+                      {FIXED_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </optgroup>
+                  </select>
+                </div>
+                {!isFixedCategory && (
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 mb-3">Domingo</label>
+                    <select value={selectedDate} onChange={e => setSelectedDate(e.target.value)} className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:bg-white outline-none text-sm font-semibold">
+                      <option value="">Escolher data...</option>
+                      {nextSundays.map(date => {
+                        const dStr = date.toISOString().split('T')[0];
+                        return <option key={dStr} value={dStr}>{date.toLocaleDateString('pt-BR')}</option>;
+                      })}
+                    </select>
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-3">Letra</label>
+                  <textarea rows={8} value={lyrics} onChange={e => setLyrics(e.target.value)} className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:bg-white outline-none text-sm font-medium" placeholder="Letra completa..."></textarea>
+                </div>
+                <button type="submit" className="w-full bg-red-600 text-white font-bold py-5 rounded-2xl hover:bg-red-700 transition-all shadow-xl text-[13px] uppercase tracking-widest">Salvar Repertório</button>
+              </form>
+            </div>
+          </section>
+
+          <section className="lg:col-span-3">
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-10 uppercase tracking-tight">Repertório Cadastrado</h3>
+              <div className="space-y-4 pr-2">
+                {songs.map(song => (
+                  <div key={song.id} className="p-6 rounded-2xl flex justify-between items-center bg-gray-50 border border-transparent hover:border-gray-200 transition-all">
+                    <div>
+                      <h4 className="font-black text-gray-900 text-sm uppercase tracking-tight">{song.title}</h4>
+                      <p className="text-[10px] text-gray-400 font-bold uppercase">{song.category} {!song.isFixed && `• ${song.date?.split('-').reverse().join('/')}`}</p>
+                    </div>
+                    {song.id.startsWith('local-') && (
+                      <button onClick={() => handleDelete(song.id)} className="p-2 text-gray-300 hover:text-red-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
