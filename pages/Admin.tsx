@@ -62,17 +62,17 @@ const Admin: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4">
-      {/* Header Centralizado */}
-      <div className="mb-10 text-center">
-        <div className="flex justify-start mb-6">
-          <Link to="/" className="text-gray-500 hover:text-red-600 transition-colors flex items-center text-sm font-medium">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Sair da Gestão
-          </Link>
-        </div>
-        <h2 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight uppercase">Gestão de Repertório</h2>
+      {/* Header Centralizado com Hierarquia Ajustada */}
+      <div className="mb-12 flex flex-col items-center">
+        <Link to="/" className="mb-4 text-gray-400 hover:text-red-600 transition-colors flex items-center text-xs font-bold uppercase tracking-widest">
+          <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Sair da Gestão
+        </Link>
+        <h2 className="text-lg md:text-xl font-black text-gray-900 tracking-[0.2em] uppercase text-center border-b-2 border-red-600 pb-1">
+          Gestão de Repertório
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
