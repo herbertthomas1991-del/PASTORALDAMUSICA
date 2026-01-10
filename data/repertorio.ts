@@ -95,4 +95,17 @@ Cordeiro de Deus que tirais o pecado do mundo, tende piedade de nós.
 
 Cordeiro de Deus que tirais o pecado do mundo, dai-nos a vossa paz.`
   }
-];
+],
+{
+    id: 'batismo-do-senhor-2026',
+    title: 'Pois abriram-se os céus (Batismo do Senhor)',
+    category: SongCategory.Entrance, // Ajuste a categoria se for para outra parte da missa
+    lyrics: `POIS ABRIRAM-SE OS CÉUS
+E A VOZ DO PAI SE OUVIU:
+EIS MEU FILHO MUITO AMADO
+PROFECIA SE ABRIU.
+
+ALELUIA, ALELUIA,
+ALELUIA, ALELUIA,
+ALELUIA, ALELUIA! (BIS)`
+  };
