@@ -1,13 +1,17 @@
+
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router';
 import Home from './pages/Home';
 import MassDetail from './pages/MassDetail';
 import Ordinario from './pages/Ordinario';
 import OrdinarioDetail from './pages/OrdinarioDetail';
-import Admin from './pages/Admin';
 import About from './pages/About';
+import Admin from './pages/Admin';
 import CommunityHome from './pages/CommunityHome';
 import CommunityMassLyrics from './pages/CommunityMassLyrics';
+import Guidelines from './pages/Guidelines';
+import Scale from './pages/Scale';
+import Announcements from './pages/Announcements';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -21,7 +25,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col font-sans selection:bg-red-100 selection:text-red-600 bg-gray-50">
+      <div className="min-h-screen flex flex-col font-sans selection:bg-red-100 selection:text-red-600 bg-gray-200/50">
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -30,6 +34,9 @@ const App: React.FC = () => {
             <Route path="/ordinario/:category" element={<OrdinarioDetail />} />
             <Route path="/sobre" element={<About />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/diretrizes" element={<Guidelines />} />
+            <Route path="/escala" element={<Scale />} />
+            <Route path="/avisos" element={<Announcements />} />
             
             {/* Rotas da Comunidade (Assembleia) */}
             <Route path="/comunidade" element={<CommunityHome />} />

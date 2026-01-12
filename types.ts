@@ -13,8 +13,8 @@ export enum SongCategory {
   Entrance = 'CANTO DE ENTRADA',
   Penitential = 'ATO PENITENCIAL',
   Gloria = 'GLÓRIA',
-  Acclamation = 'CANTO DE ACLAMAÇÃO AO EVANGELHO',
-  Offertory = 'CANTO DE APRESENTAÇÃO DAS OFERTAS',
+  Acclamation = 'ACLAMAÇÃO AO EVANGELHO',
+  Offertory = 'APRESENTAÇÃO DAS OFERTAS',
   Holy = 'SANTO',
   LambOfGod = 'CORDEIRO',
   Communion = 'CANTO DE COMUNHÃO',
@@ -25,10 +25,12 @@ export interface Song {
   id: string;
   title: string;
   lyrics: string;
+  chords?: string;
   link?: string;
   category: SongCategory;
   date?: string;
   isFixed?: boolean;
+  tempo?: 'Lento' | 'Moderado' | 'Solene' | 'Vibrante'; // Novo: Andamento
 }
 
 export interface LiturgicalInfo {

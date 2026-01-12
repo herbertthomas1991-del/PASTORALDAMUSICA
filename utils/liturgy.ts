@@ -1,27 +1,21 @@
 
 import { LiturgicalYear, LiturgicalSeason } from '../types';
+import { CALENDARIO_2025 } from '../data/calendario2025';
+import { CALENDARIO_2026 } from '../data/calendario2026';
+import { CALENDARIO_2027 } from '../data/calendario2027';
+import { CALENDARIO_2028 } from '../data/calendario2028';
 
 /**
  * Tabela oficial de transição dos ciclos litúrgicos (1º Domingo do Advento)
  */
 const LITURGICAL_TRANSITIONS: { date: string; cycle: LiturgicalYear }[] = [
-  { date: '2024-12-01', cycle: 'C' }, // Início do Ano C anterior
+  { date: '2024-12-01', cycle: 'C' }, 
   { date: '2025-11-30', cycle: 'A' },
   { date: '2026-11-29', cycle: 'B' },
   { date: '2027-11-28', cycle: 'C' },
-  { date: '2028-12-03', cycle: 'A' },
-  { date: '2029-12-02', cycle: 'B' },
-  { date: '2030-12-01', cycle: 'C' },
-  { date: '2031-11-30', cycle: 'A' },
-  { date: '2032-11-28', cycle: 'B' },
-  { date: '2033-11-27', cycle: 'C' },
-  { date: '2034-12-03', cycle: 'A' },
-  { date: '2035-12-02', cycle: 'B' }
+  { date: '2028-12-03', cycle: 'A' }
 ];
 
-/**
- * Converte um objeto Date para string YYYY-MM-DD mantendo o fuso horário local.
- */
 export const toDateString = (date: Date): string => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -29,159 +23,102 @@ export const toDateString = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-/**
- * Retorna o Ano Litúrgico (A, B ou C) baseado na tabela de transições.
- */
 export const getLiturgicalYear = (date: Date): LiturgicalYear => {
   const dateStr = toDateString(date);
-  
-  // Percorre as transições do futuro para o passado
-  // A primeira transição que for menor ou igual à data atual define o ciclo.
   const transitions = [...LITURGICAL_TRANSITIONS].sort((a, b) => b.date.localeCompare(a.date));
-  
   for (const transition of transitions) {
     if (dateStr >= transition.date) {
       return transition.cycle;
     }
   }
-  
-  return 'C'; // Fallback para ciclo atual antes de 2025
+  return 'C';
 };
 
-/**
- * Calcula a data da Páscoa para um determinado ano.
- */
-export const getEaster = (year: number): Date => {
-  const a = year % 19;
-  const b = Math.floor(year / 100);
-  const c = year % 100;
-  const d = Math.floor(b / 4);
-  const e = b % 4;
-  const f = Math.floor((b + 8) / 25);
-  const g = Math.floor((b - f + 1) / 3);
-  const h = (19 * a + b - d - g + 15) % 30;
-  const i = Math.floor(c / 4);
-  const k = c % 4;
-  const l = (32 + 2 * e + 2 * i - h - k) % 7;
-  const m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const month = Math.floor((h + l - 7 * m + 114) / 31);
-  const day = ((h + l - 7 * m + 114) % 31) + 1;
-  return new Date(year, month - 1, day);
-};
-
-const getAdventStart = (year: number): Date => {
-  const christmas = new Date(year, 11, 25);
-  const dayOfWeek = christmas.getDay();
-  const diff = dayOfWeek === 0 ? 28 : 21 + dayOfWeek;
-  const start = new Date(year, 11, 25 - diff);
-  return start;
-};
-
-const getEpiphany = (year: number): Date => {
-  const date = new Date(year, 0, 2);
-  while (date.getDay() !== 0) {
-    date.setDate(date.getDate() + 1);
-  }
-  return date;
-};
-
-export interface LiturgicalSundayInfo {
+export interface LiturgicalDayInfo {
   label: string;
-  celebration: string;
+  description?: string;
+  celebrationType: string;
   dateFormatted: string;
   color: 'green' | 'white' | 'purple' | 'red';
+  isHighCelebration?: boolean;
 }
 
-export const getLiturgicalSundayInfo = (date: Date): LiturgicalSundayInfo => {
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const dStr = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}`;
+export const getLiturgicalDayInfo = (date: Date): LiturgicalDayInfo => {
+  const dateStr = toDateString(date);
+  const dStr = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear().toString().slice(-2)}`;
   
-  const easter = getEaster(year);
-  const adventStart = getAdventStart(year);
-  const christmas = new Date(year, 11, 25);
-  const epiphany = getEpiphany(year);
-  const baptism = new Date(epiphany);
-  baptism.setDate(epiphany.getDate() + 7);
+  const year = date.getFullYear();
+  let calEntry: any = null;
 
-  if (date >= adventStart && date < christmas) {
-    const weeks = Math.ceil((date.getTime() - adventStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-    return { label: `${weeks}º DOMINGO DO ADVENTO`, celebration: `Advento`, dateFormatted: dStr, color: 'purple' };
-  }
+  if (year === 2025) calEntry = CALENDARIO_2025[dateStr];
+  else if (year === 2026) calEntry = CALENDARIO_2026[dateStr];
+  else if (year === 2027) calEntry = CALENDARIO_2027[dateStr];
+  else if (year === 2028) calEntry = CALENDARIO_2028[dateStr];
 
-  if (date >= christmas || (month === 0 && date < baptism)) {
-    if (month === 11 && day === 25) return { label: 'NATAL DO SENHOR', celebration: 'Nascimento de Jesus', dateFormatted: dStr, color: 'white' };
-    if (month === 11 && date > christmas) return { label: 'SAGRADA FAMÍLIA', celebration: '8ª de Natal', dateFormatted: dStr, color: 'white' };
-    if (month === 0 && date.getTime() === epiphany.getTime()) return { label: 'EPIFANIA DO SENHOR', celebration: 'Manifestação', dateFormatted: dStr, color: 'white' };
-    if (month === 0 && date.getTime() === baptism.getTime()) return { label: 'BATISMO DO SENHOR', celebration: 'Início da Vida Pública', dateFormatted: dStr, color: 'white' };
-    return { label: 'OITAVA DE NATAL', celebration: 'Tempo do Natal', dateFormatted: dStr, color: 'white' };
-  }
-
-  const ashWednesday = new Date(easter);
-  ashWednesday.setDate(easter.getDate() - 46);
-  const pentecost = new Date(easter);
-  pentecost.setDate(easter.getDate() + 49);
-
-  if (date >= ashWednesday && date < easter) {
-    const weeks = Math.ceil((date.getTime() - ashWednesday.getTime()) / (7 * 24 * 60 * 60 * 1000));
-    const labels = ["1º DOMINGO DA QUARESMA", "2º DOMINGO DA QUARESMA", "3º DOMINGO DA QUARESMA", "4º DOMINGO DA QUARESMA", "5º DOMINGO DA QUARESMA", "DOMINGO DE RAMOS"];
-    const isRamos = weeks === 6;
-    return { 
-      label: labels[weeks-1] || 'QUARESMA', 
-      celebration: isRamos ? 'Paixão do Senhor' : 'Tempo de Conversão', 
-      dateFormatted: dStr, 
-      color: isRamos ? 'red' : 'purple' 
+  if (calEntry) {
+    const typeLabel = calEntry.type === 'S' ? 'Solenidade' : calEntry.type === 'F' ? 'Festa' : calEntry.type === 'D' ? 'Domingo' : 'Memória';
+    return {
+      label: calEntry.label,
+      description: calEntry.description,
+      celebrationType: typeLabel,
+      dateFormatted: dStr,
+      color: calEntry.color,
+      isHighCelebration: ['S', 'F', 'D'].includes(calEntry.type)
     };
   }
 
-  if (date >= easter && date <= pentecost) {
-    if (date.getTime() === easter.getTime()) return { label: 'DOMINGO DA RESSURREIÇÃO', celebration: 'Páscoa do Senhor', dateFormatted: dStr, color: 'white' };
-    const weeks = Math.ceil((date.getTime() - easter.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-    if (date.getTime() === pentecost.getTime()) return { label: 'DOMINGO DE PENTECOSTES', celebration: 'Vinda do Espírito Santo', dateFormatted: dStr, color: 'red' };
-    return { label: `${weeks}º DOMINGO DA PÁSCOA`, celebration: 'Tempo Pascal', dateFormatted: dStr, color: 'white' };
-  }
-
-  const startOfOrdinary = new Date(baptism);
-  startOfOrdinary.setDate(baptism.getDate() + 1);
-  
-  let weekDTC = 0;
-  if (date > pentecost) {
-    const weeksFromAdvent = 34;
-    const diffToAdvent = Math.ceil((adventStart.getTime() - date.getTime()) / (7 * 24 * 60 * 60 * 1000));
-    weekDTC = weeksFromAdvent - diffToAdvent + 1;
-  } else {
-    weekDTC = Math.ceil((date.getTime() - startOfOrdinary.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-  }
-
-  const sundayBeforeAdvent = new Date(adventStart);
-  sundayBeforeAdvent.setDate(adventStart.getDate() - 7);
-  if (date.getTime() === sundayBeforeAdvent.getTime()) return { label: '34º DOMINGO DO TEMPO COMUM', celebration: 'Cristo Rei do Universo', dateFormatted: dStr, color: 'white' };
-
-  return { label: `${weekDTC}º DOMINGO DO TEMPO COMUM`, celebration: 'Domingo do Tempo Comum', dateFormatted: dStr, color: 'green' };
+  const isSunday = date.getDay() === 0;
+  return {
+    label: isSunday ? 'Domingo Litúrgico' : 'Ferial',
+    celebrationType: isSunday ? 'Celebração Dominical' : 'Ferial',
+    dateFormatted: dStr,
+    color: isSunday ? 'green' : 'green'
+  };
 };
 
 export const getLiturgicalSeason = (date: Date): LiturgicalSeason => {
-  const info = getLiturgicalSundayInfo(date);
-  if (info.label.includes('ADVENTO')) return LiturgicalSeason.Advent;
-  if (info.label.includes('NATAL') || info.label.includes('EPIFANIA') || info.label.includes('BATISMO') || info.label.includes('OITAVA')) return LiturgicalSeason.Christmas;
-  if (info.label.includes('QUARESMA') || info.label.includes('RAMOS')) return LiturgicalSeason.Lent;
-  if (info.label.includes('PÁSCOA') || info.label.includes('PENTECOSTES')) return LiturgicalSeason.Easter;
+  const info = getLiturgicalDayInfo(date);
+  const labelUpper = info.label.toUpperCase();
+  if (labelUpper.includes('ADVENTO')) return LiturgicalSeason.Advent;
+  if (labelUpper.includes('NATAL') || labelUpper.includes('EPIFANIA') || labelUpper.includes('BATISMO')) return LiturgicalSeason.Christmas;
+  if (labelUpper.includes('QUARESMA') || labelUpper.includes('CINZAS') || labelUpper.includes('RAMOS')) return LiturgicalSeason.Lent;
+  if (labelUpper.includes('PÁSCOA') || labelUpper.includes('PENTECOSTES') || labelUpper.includes('ASCENSÃO')) return LiturgicalSeason.Easter;
   return LiturgicalSeason.Ordinary;
 };
 
-export const getSundaysOfMonth = (year: number, month: number): Date[] => {
-  const sundays: Date[] = [];
+export const getSignificantLiturgicalDaysOfMonth = (year: number, month: number): Date[] => {
+  const significantDays: Date[] = [];
   const date = new Date(year, month, 1);
+  
+  const calendarMap: Record<number, any> = { 2025: CALENDARIO_2025, 2026: CALENDARIO_2026, 2027: CALENDARIO_2027, 2028: CALENDARIO_2028 };
+  const currentCal = calendarMap[year] || {};
+
   while (date.getMonth() === month) {
-    if (date.getDay() === 0) {
-      sundays.push(new Date(date));
+    const dStr = toDateString(date);
+    const isSunday = date.getDay() === 0;
+    const isSpecial = currentCal[dStr] && ['S', 'F'].includes(currentCal[dStr].type);
+    
+    if (isSunday || isSpecial) {
+      significantDays.push(new Date(date));
     }
     date.setDate(date.getDate() + 1);
   }
-  return sundays;
+  return significantDays.sort((a, b) => a.getTime() - b.getTime());
 };
 
-export const formatDateBr = (date: Date): string => {
-  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+export const getMostRecentSignificantDay = (date: Date): Date => {
+  const check = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const calendarMap: Record<number, any> = { 2025: CALENDARIO_2025, 2026: CALENDARIO_2026, 2027: CALENDARIO_2027, 2028: CALENDARIO_2028 };
+  
+  for (let i = 0; i < 8; i++) {
+    const dStr = toDateString(check);
+    const year = check.getFullYear();
+    const currentCal = calendarMap[year] || {};
+    const isSunday = check.getDay() === 0;
+    const isSpecial = currentCal[dStr] && ['S', 'F'].includes(currentCal[dStr].type);
+    
+    if (isSunday || isSpecial) return new Date(check);
+    check.setDate(check.getDate() - 1);
+  }
+  return date;
 };
