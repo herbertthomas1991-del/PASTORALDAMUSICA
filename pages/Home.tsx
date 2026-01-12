@@ -56,6 +56,7 @@ const Home: React.FC = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-4 leading-none">
             PASTORAL DA MÚSICA
           </h1>
+          {/* Slogan: Sem caixa alta, sem quebra de linha, tamanho Grande (text-xl a 3xl) */}
           <p className="text-white/80 text-xl md:text-3xl font-medium italic whitespace-nowrap tracking-tight">
             "Em harmonia, louvando a Deus com alegria!"
           </p>
