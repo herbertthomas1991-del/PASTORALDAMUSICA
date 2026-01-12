@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Song, SongCategory } from '../types';
 import { saveSong, deleteSong, getAdminSongsList } from '../services/storage';
 import { VARIABLE_CATEGORIES, FIXED_CATEGORIES } from '../constants';
-import { getSignificantLiturgicalDaysOfMonth, toDateString, getLiturgicalYear, getLiturgicalDayInfo } from '../utils/liturgy';
+import { getSignificantLiturgicalDaysOfMonth, toDateString, getLiturgicalDayInfo } from '../utils/liturgy';
 import NavigationMenu from '../components/NavigationMenu';
 
 const Admin: React.FC = () => {

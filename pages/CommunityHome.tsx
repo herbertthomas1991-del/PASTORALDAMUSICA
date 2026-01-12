@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { getMostRecentSignificantDay, toDateString, getSignificantLiturgicalDaysOfMonth, getLiturgicalDayInfo } from '../utils/liturgy';
@@ -8,7 +7,6 @@ const CommunityHome: React.FC = () => {
   const navigate = useNavigate();
   const [showList, setShowList] = useState(false);
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const [viewDate, setViewDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1));
 
   useEffect(() => {

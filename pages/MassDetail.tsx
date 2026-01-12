@@ -1,8 +1,7 @@
-
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { getSongsByDate, getAllSongs } from '../services/storage';
-import { SongCategory, Song, LiturgicalSeason } from '../types';
+import { SongCategory, LiturgicalSeason } from '../types';
 import { getLiturgicalDayInfo, getLiturgicalSeason } from '../utils/liturgy';
 import NavigationMenu from '../components/NavigationMenu';
 

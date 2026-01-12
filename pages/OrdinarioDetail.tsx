@@ -1,8 +1,6 @@
-
 import React, { useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router';
 import { getAllSongs } from '../services/storage';
-import { Song } from '../types';
 
 const OrdinarioDetail: React.FC = () => {
   const { category } = useParams<{ category: string }>();
