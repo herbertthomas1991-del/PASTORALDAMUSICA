@@ -25,7 +25,7 @@ const MassDetail: React.FC = () => {
     if (isAutoScrolling) {
       scrollInterval.current = window.setInterval(() => {
         window.scrollBy({ top: 1, behavior: 'auto' });
-      }, 95); 
+      }, 100); 
     } else {
       if (scrollInterval.current) clearInterval(scrollInterval.current);
     }
@@ -35,15 +35,15 @@ const MassDetail: React.FC = () => {
   if (!date) return null;
 
   const liturgicalFlow = [
-    { category: SongCategory.Entrance, id: 1 },
-    { category: SongCategory.Penitential, id: 2 },
-    { category: SongCategory.Gloria, id: 3 },
-    { category: SongCategory.Acclamation, id: 4 },
-    { category: SongCategory.Offertory, id: 5 },
-    { category: SongCategory.Holy, id: 6 },
-    { category: SongCategory.LambOfGod, id: 7 },
-    { category: SongCategory.Communion, id: 8 },
-    { category: SongCategory.Dismissal, id: 9 },
+    { category: SongCategory.Entrance },
+    { category: SongCategory.Penitential },
+    { category: SongCategory.Gloria },
+    { category: SongCategory.Acclamation },
+    { category: SongCategory.Offertory },
+    { category: SongCategory.Holy },
+    { category: SongCategory.LambOfGod },
+    { category: SongCategory.Communion },
+    { category: SongCategory.Dismissal },
   ];
 
   const colorStyles = {
@@ -58,7 +58,6 @@ const MassDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white pb-60">
-      {/* Controle de Rolagem */}
       <button 
         onClick={() => setIsAutoScrolling(!isAutoScrolling)}
         className={`fixed bottom-8 right-6 z-[120] p-4 rounded-full shadow-2xl transition-all border flex items-center gap-3 px-6 ${
@@ -73,7 +72,6 @@ const MassDetail: React.FC = () => {
         </svg>
       </button>
 
-      {/* Camada 1: Topo Fixo (Data e Info Celebração) */}
       <div className={`${headerStyle} shadow-sm transition-all duration-300 relative z-[110] sticky top-0 h-12 flex items-center`}>
         <div className="max-w-6xl mx-auto w-full px-6 flex justify-between items-center">
           <button onClick={() => navigate('/')} className={`flex items-center text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70 ${isWhite ? 'text-gray-400' : 'text-white/60'}`}>
@@ -107,7 +105,6 @@ const MassDetail: React.FC = () => {
 
             return (
               <section key={step.category} className="relative">
-                {/* Camada 2: Categoria (Presa no topo logo abaixo do header) */}
                 <div className="sticky top-12 bg-white/95 backdrop-blur-sm z-[100] border-b-2 border-red-600 pt-6 pb-2 mb-6">
                   <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-gray-900 leading-none">
                     {step.category}
@@ -121,8 +118,6 @@ const MassDetail: React.FC = () => {
 
                       return (
                         <div key={song.id} className="animate-in fade-in duration-500">
-                          
-                          {/* Camada 3: Etiqueta de Opção (Apenas se houver mais de uma, fixa no topo) */}
                           {hasMultipleOptions && (
                             <div className="sticky top-[84px] bg-white/90 backdrop-blur-md z-[90] flex items-center justify-between py-2 mb-4 border-b border-gray-100">
                               <span className="bg-red-600 text-white px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest">
@@ -132,14 +127,13 @@ const MassDetail: React.FC = () => {
                             </div>
                           )}
 
-                          {/* Se for opção única, mostra apenas os meta-dados sem prender */}
                           {!hasMultipleOptions && (
-                            <div className="flex justify-end gap-3 mb-2 opacity-30">
+                            <div className="flex justify-between items-center mb-4 border-b border-gray-50 pb-2">
+                              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-tight">{song.title}</h3>
                               {song.tempo && <span className="text-[8px] font-bold text-gray-300 uppercase tracking-widest">{song.tempo}</span>}
                             </div>
                           )}
 
-                          {/* Letra da Música - Tamanho Grande (Ajustado de Gigante) */}
                           <div className="font-mono-custom text-2xl md:text-4xl leading-[1.4] text-gray-900 whitespace-pre-wrap selection:bg-red-50">
                             {song.chords && (
                               <div className="mb-6 text-red-600 font-bold bg-red-50/30 p-5 rounded-2xl border border-red-100 text-lg md:text-2xl">
@@ -152,7 +146,6 @@ const MassDetail: React.FC = () => {
                             </div>
                           </div>
 
-                          {/* Espaçamento entre opções */}
                           {hasMultipleOptions && sIdx < options.length - 1 && (
                             <div className="pt-12"></div>
                           )}
@@ -168,14 +161,6 @@ const MassDetail: React.FC = () => {
               </section>
             );
           })}
-        </div>
-
-        {/* Rodapé Final */}
-        <div className="mt-40 border-t border-gray-100 pt-16 text-center pb-20">
-          <p className="text-gray-300 text-[8px] font-bold uppercase tracking-[0.3em] mb-8">Ide em paz e que o Senhor vos acompanhe.</p>
-          <button onClick={() => navigate('/')} className="px-8 py-4 bg-gray-900 text-white rounded-2xl text-[9px] font-black uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg active:scale-95">
-            Voltar ao Início
-          </button>
         </div>
       </div>
     </div>

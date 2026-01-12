@@ -56,7 +56,6 @@ const Home: React.FC = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-4 leading-none">
             PASTORAL DA MÚSICA
           </h1>
-          {/* Slogan: Sem caixa alta, sem quebra de linha, tamanho Grande */}
           <p className="text-white/80 text-xl md:text-3xl font-medium italic whitespace-nowrap tracking-tight">
             "Em harmonia, louvando a Deus com alegria!"
           </p>
@@ -132,10 +131,6 @@ const Home: React.FC = () => {
             <div className="w-px h-6 bg-gray-100 mx-2"></div>
             <button onClick={goToToday} className="px-6 py-3 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all active:scale-95">Hoje</button>
           </div>
-        </div>
-
-        <div className="pb-12 text-center">
-          <Link to="/admin" className="text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-red-600 transition-colors">Acesso Restrito ao Coordenador</Link>
         </div>
       </div>
     </div>
